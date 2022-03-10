@@ -89,12 +89,14 @@ def process(name, path):
         except:
             print('==============================getLayerFromTableJieXi fail, check word file')
 
-idx = 30
+idx = 31
 name = allname[idx]
 print(name)
 
 name = '顺北5'
 # path = r'C:\Users\HP\Desktop\tmp\顺北5井.docx'
 manager.findFile( name )
-path = check(153)
-process(name, path)
+
+# idx = 153
+# path = check(idx)
+# process(name, path)

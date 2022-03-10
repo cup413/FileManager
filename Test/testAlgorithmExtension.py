@@ -14,12 +14,21 @@ from AlgorithmExtension.DocxManagerExtJieXiExtBsInfo import  DocxManagerExJieXiE
 
 from AlgorithmExtension.ManagerExtJieXiExtBsInfo import  ManagerExtJieXiExtBsInfo
 
-p = r'D:\李晨星文件夹\项目文件\塔里木程小桂'
-manager = ManagerExtJieXiExtBsInfo(p)
+# p = r'D:\李晨星文件夹\项目文件\塔里木程小桂'
+# manager = ManagerExtJieXiExtBsInfo(p)
+#
+# path = r'C:\Users\HP\Desktop\tmp\顺北5井.docx'
+#+
+# name = '顺北5'
+# manager.getInfoFromBsInfoTable(path)
+#
+# manager.saveInfoFromBsInfoTable(name)
 
-path = r'C:\Users\HP\Desktop\tmp\顺北5井.docx'
 
-name = '顺北5'
-manager.getInfoFromBsInfoTable(path)
+from AlgorithmExtension.DocxManagerExtJieXiExtBsInfoExtXLSInfo import DocxManagerExJieXiExtBsInfoExtXLSInfo
 
-manager.saveInfoFromBsInfoTable(name)
+# p = r'D:\李晨星文件夹\项目文件\塔里木程小桂'
+docxManager = DocxManagerExJieXiExtBsInfoExtXLSInfo()
+
+path = r'C:\Users\HP\Desktop\abc\顺北5井基本数据表.xls'
+docxManager.getInfoFromXLS(path)

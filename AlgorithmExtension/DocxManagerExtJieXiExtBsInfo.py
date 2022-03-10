@@ -2,6 +2,7 @@ from AlgorithmExtension.DocxManagerExtJieXi import DocxManagerLayerExtJieXi
 
 import pandas as pd
 
+
 class DocxManagerExJieXiExtBsInfo(DocxManagerLayerExtJieXi):
 
     def makeDoc(self, path):
