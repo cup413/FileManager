@@ -17,7 +17,21 @@ import re
 
 
 class DocxManager:
+
+    def toolDropSpace(self, s):
+        tmps = ''
+        for i in s:
+            if i!= ' ':
+                tmps = tmps+i
+        return tmps
+
     def makeDoc(self, path):
+        '''
+        获取path所指定的word文档的文字和表格，分别保存在
+        self.text和self.tables里面
+        :param path:
+        :return:
+        '''
         doc = docx.Document(path)
 
         pa = [p.text for p in doc.paragraphs]
@@ -25,7 +39,14 @@ class DocxManager:
 
         self.tables = doc.tables
 
+
     def checkInTables(self):
+        '''
+        检查word文件是否含有地层分层表，
+        判断方法是cell(0,0)含有地层
+        cell(1,0)含有界或者系
+        :return:
+        '''
         for table in self.tables:
             try:
                 s1 = table.cell(0,0).text
@@ -37,12 +58,13 @@ class DocxManager:
             if '地' in s1 and ( '界' in s2 or '系' in s2):
                 return True
 
-            if '界' in s1 and '系' in s2:
-                return True
-
         return False
 
     def returnTable(self):
+        '''
+        获取基本信息表
+        :return:
+        '''
         mytable = []
         for table in self.tables:
             col = len(table.columns)
@@ -57,10 +79,15 @@ class DocxManager:
                 for j in range(col):
                     atable.append(table.cell(i, j).text)
                 mytable.append(atable)
-        print('=============')
+        # print('=============')
         return mytable
 
     def getInfoFromTable(self):
+        '''
+        从基本信息表获取数据，
+        包括大地坐标、经纬度、地面海拔、补心海拔和补心高
+        :return:
+        '''
         def addData(p, i, j, atable):
             # print(p,i,j, atable[i][j])
             while (atable[i][j] == atable[i][j + 1]):
@@ -106,10 +133,16 @@ class DocxManager:
         for i in range(len(lst)):
             print(lst[i], self.info[i])
 
-        return self.info
+        if self.info[0] != 'T':
+            return True
+        return False
 
     def getInfoFromText(self):
-
+        '''
+        从文字中获取基本信息
+        包括大地坐标、经纬度、地面海拔、补心海拔和补心高
+        :return:
+        '''
         def delSpace(s):
             tmps = ''
             for i in s:
@@ -141,8 +174,19 @@ class DocxManager:
         for i in range(len(lst)):
             print(lst[i], self.info[i])
 
+        if self.info[0] !='T':
+            return True
+        else:
+            return False
+
     def returnLst(self):
-        print('==========find layer================')
+        '''
+        根据地层-界（系）找到地层分层数据
+        并且靶这个分层数据返回（lst)
+        :return:
+        : lst, 一个二维数组，保存分层数据表
+        '''
+        # print('==========find layer================')
         lst = []
         for table in self.tables:
             #     table = tables[1]#获取文件中的第9个表格
@@ -154,12 +198,12 @@ class DocxManager:
                 if i != ' ':
                     s = s + i
             try:
-                print(s, table.cell(1,0).text )
+                table.cell(1,0).text
             except:
                 continue
 
 
-            print('333333333333333333333333')
+            # print('333333333333333333333333')
             s2 = table.cell(1,0).text
             if ('地层' in s) and ( '界' in s2 or '系' in s2 ):
 
@@ -172,16 +216,21 @@ class DocxManager:
                     alst = []
                     for j in range(col):
                         alst.append(table.cell(i, j).text)
-                        print(table.cell(i, j).text, end="  ")
+                        # print(table.cell(i, j).text, end="  ")
                     lst.append(alst)
-                    print()
-                print('===========lst over')
+                    # print()
+                # print('===========lst over')
 
                 return lst
 
         return lst
 
     def getLayer(self):
+        '''
+        从获得的分层数据数组中提取系-底界深度
+        :return:
+        : ret，一个二维数组，保存系-底界深度
+        '''
         def getDeepth(s):
             if ('底' in s and '深' in s) or ('井' in s and '深' in s):
                 return True
@@ -193,7 +242,7 @@ class DocxManager:
             return False
 
         def getidx(lst, isTrue):
-            print(lst[0])
+            # print(lst[0])
             idx = 0
             for i in range(len(lst[0])):
 
@@ -203,8 +252,8 @@ class DocxManager:
             return idx
         lst = self.returnLst()
 
-        print('========lst')
-        print(lst)
+        # print('========lst')
+        # print(lst)
 
         # idx = 0
         # for i in range(len(lst[0])):
@@ -215,7 +264,7 @@ class DocxManager:
         # idxXi = 0
         idx = getidx(lst, getDeepth)
         idxXi = getidx(lst, getXi)
-        print('idx, idxXi', idx, idxXi)
+        # print('idx, idxXi', idx, idxXi)
 
         ret = []
         for i in lst:
@@ -225,9 +274,15 @@ class DocxManager:
         return ret
 
     def getLayer1(self):
+
+        '''
+        将getLayer()获得的系-底界深度去重得到最后的结果
+        :return:
+        : self.Layer，二维数组，保存系-底界深度
+        '''
         if not self.checkInfo() and not self.checkInTables():
             print('地层不存在')
-            return
+            return False
 
         ret = self.getLayer()
 
@@ -248,30 +303,59 @@ class DocxManager:
             alreadyIn.add(ret[i][0])
             fret.append([ret[i][0], ret[i][1]])
             print([ret[i][0], ret[i][1]])
-        print('==============')
+        # print('==============')
         fret.reverse()
 
         self.layer = fret
-        return self.layer
+
+        if len(self.layer) == 0:
+            return False
+        return True
 
     def saveLayer(self, name):
+        '''
+        保存地层分层数据
+        :param name: 保存分层数据的名字
+        :return:
+        '''
+        if self.layer == '':
+            return False
+
         folder = r'D:\李晨星文件夹\项目文件\塔里木程小桂\layer\%s.csv'
         pth = folder % name
-        print(pth)
+
 
         f = pd.DataFrame(self.layer[1:], columns=['层', '底界深度'])
         f.to_csv(pth, index=False)
+        print(pth, '   保存成功')
+        return True
 
     def saveInfo(self, name):
+        '''
+        保存基本信息
+        :param name: 基本信息的名字
+        :return:
+        '''
+        if self.info[0] == 'T':
+            print('info 为空，不能保存')
+            return False
+
         folder = r'D:\李晨星文件夹\项目文件\塔里木程小桂\info\%s.csv'
         pth = folder % name
-        print(pth)
+        print(pth,'   保存成功')
 
         col = ['X', 'Y', 'Lat', 'Lon', 'Hd', 'Hb', 'Hbb']
         f = pd.DataFrame([self.info], columns=col)
         f.to_csv(pth, index=False)
 
+        return True
+
+
     def checkInfo(self):
+        '''
+        从self.text检查word文档是否包含基本信息和分层数据
+        :return:
+        '''
         print('===============检查信息===========')
         if '座标' in self.text or '坐标' in self.text:
             print('坐标存在')

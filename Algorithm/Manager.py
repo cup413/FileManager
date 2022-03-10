@@ -107,7 +107,7 @@ class Manager:
             path = path +'x'
 
         self.docManager.makeDoc( path)
-        self.docManager.getInfoFromTable()
+        return self.docManager.getInfoFromTable()
 
     def getInfoFromText(self, path):
         if path.split('.')[-1] == 'doc':
@@ -118,7 +118,7 @@ class Manager:
             path = path +'x'
 
         self.docManager.makeDoc(path)
-        self.docManager.getInfoFromText()
+        return self.docManager.getInfoFromText()
 
     def saveInfo(self, path):
         self.docManager.saveInfo(path)
@@ -132,6 +132,6 @@ class Manager:
             path = path +'x'
 
         self.docManager.makeDoc(path)
-        self.docManager.getLayer1()
-    def saveLayer( self, path):
-        self.docManager.saveLayer(path)
+        return self.docManager.getLayer1()
+    def saveLayer( self, name):
+        return self.docManager.saveLayer(name)
