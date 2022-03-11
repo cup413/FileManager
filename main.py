@@ -116,27 +116,36 @@ def finalProcess(idx, name, path):
         process(name, path)
 
 
-idx = 49
+idx = 69
+chck = 1
 name = allname[idx]
 print(name)
 
-# name = '跃满25'
-# path = r'C:\Users\HP\Desktop\tmp\顺北5井.docx'
+name = '中12'
+path = r'D:\李晨星文件夹\项目文件\1.塔里木相关\塔里木资料\塔里木单井资料（中石化）\中12井\33号中12井地质设计（修改后）.doc'
 manager.findFile( name )
 
-#
-allkey = ['%s.*录井总结报告','%s.*完井', '%s.*基本数据表', '%s.*地层分层数据表']
-allidx = []
-for i in allkey:
-    # print( i% name)
-    allidx.append( manager.findKeyWrodInFile(i% name))
-print(allidx)
-#
-for idx in allidx:
-    if idx == -1:
-        continue
-    finalProcess(idx, name, '')
-    print('****************************************')
+if chck == 1:
+    name = '星火3'
+    path = r'D:\李晨星文件夹\项目文件\塔里木程小桂\li\塔里木单井资料（中石油）\星火3井\星火3井钻遇地层简表.doc'
+
+if chck == 0:
+    allkey = ['%s.*录井总结报告','%s.*完井', '%s.*基本数据表', '%s.*地层分层数据表']
+    allidx = []
+    for i in allkey:
+        # print( i% name)
+        allidx.append( manager.findKeyWrodInFile(i% name))
+    print(allidx)
+    #
+    for idx in allidx:
+        if idx == -1:
+            continue
+        finalProcess(idx, name, '')
+        print('****************************************')
+
+else:
+    # finalProcess(-1, name, path)
+    process(name, path)
 
 info = r'D:\李晨星文件夹\项目文件\塔里木程小桂\info\%s.csv'
 layer = r'D:\李晨星文件夹\项目文件\塔里木程小桂\layer\%s.csv'
@@ -150,8 +159,3 @@ if os.path.exists(layer%name):
     print(layer%name, '      存在')
     df = pd.read_csv(layer%name)
     print(df)
-
-# name = '中古111'
-# path = r'D:\李晨星文件夹\项目文件\塔里木程小桂\data\温压水数据\连续测温数据\中古111静梯报告(华油20100106).doc'
-# # finalProcess(-1, name, path)
-# process(name, path)
