@@ -1,3 +1,5 @@
+import time
+
 from Algorithm.FileManager import FileManager
 from Algorithm.Doc2Docx import Doc2Docx
 from Algorithm.DocxManager import DocxManager
@@ -10,6 +12,8 @@ from AlgorithmExtension.ManagerExtJieXiExtBsInfoExtXLSInfo import  ManagerExtJie
 import pandas as pd
 
 import os
+
+import time
 
 # print('initialize')
 p = r'D:\李晨星文件夹\项目文件'
@@ -115,46 +119,49 @@ def finalProcess(idx, name, path):
         path = check(idx)
         process(name, path)
 
+for idx in range(86, 200):
+    # idx = 85
+    chck = 0
+    name = allname[idx]
+    print(name)
 
-idx = 73
-chck = 0
-name = allname[idx]
-print(name)
+    # name = '顺北5'
 
+    manager.findFile( name )
 
-manager.findFile( name )
+    if chck == 1:
+        name = '星火2'
+        path = r'D:\李晨星文件夹\项目文件\塔里木程小桂\data\塔里木单井资料\星火2井\星火2井地层简表.doc'
 
-if chck == 1:
-    name = '中12'
-    path = r'D:\李晨星文件夹\项目文件\1.塔里木相关\塔里木资料\塔里木单井资料（中石化）\中12井\33号中12井地质设计（修改后）.doc'
+    if chck == 0:
+        allkey = ['%s.*录井总结报告','%s.*完井', '%s.*基本数据表', '%s.*地层分层数据表']
+        allidx = []
+        for i in allkey:
+            # print( i% name)
+            allidx.append( manager.findKeyWrodInFile(i% name))
+        print(allidx)
+        #
+        for idx in allidx:
+            if idx == -1:
+                continue
+            finalProcess(idx, name, '')
+            print('****************************************')
 
-if chck == 0:
-    allkey = ['%s.*录井总结报告','%s.*完井', '%s.*基本数据表', '%s.*地层分层数据表']
-    allidx = []
-    for i in allkey:
-        # print( i% name)
-        allidx.append( manager.findKeyWrodInFile(i% name))
-    print(allidx)
-    #
-    for idx in allidx:
-        if idx == -1:
-            continue
-        finalProcess(idx, name, '')
-        print('****************************************')
+    else:
+        # finalProcess(-1, name, path)
+        process(name, path)
 
-else:
-    # finalProcess(-1, name, path)
-    process(name, path)
+    info = r'D:\李晨星文件夹\项目文件\塔里木程小桂\info\%s.csv'
+    layer = r'D:\李晨星文件夹\项目文件\塔里木程小桂\layer\%s.csv'
+    print('\n\n\n')
+    if os.path.exists(info%name):
+        print(info%name, '      存在')
+        df = pd.read_csv(info%name)
+        print(df)
+    print('**************************')
+    if os.path.exists(layer%name):
+        print(layer%name, '      存在')
+        df = pd.read_csv(layer%name)
+        print(df)
 
-info = r'D:\李晨星文件夹\项目文件\塔里木程小桂\info\%s.csv'
-layer = r'D:\李晨星文件夹\项目文件\塔里木程小桂\layer\%s.csv'
-print('\n\n\n')
-if os.path.exists(info%name):
-    print(info%name, '      存在')
-    df = pd.read_csv(info%name)
-    print(df)
-print('**************************')
-if os.path.exists(layer%name):
-    print(layer%name, '      存在')
-    df = pd.read_csv(layer%name)
-    print(df)
+    time.sleep(5)
