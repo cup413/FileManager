@@ -153,13 +153,15 @@ class DocxManager:
         def getNum(pat, i):
             reg = pat
             s = re.search(reg, self.text)
+            if s==None:
+                return False
             print(s)
-            s = s.group(0)
+            s = s.group()
             #             print(s)
             s = delSpace(s)
             reg = '[0-9]*\.[0-9]*'
             s = re.search(reg, s)
-            self.info[i] = s.group(0)
+            self.info[i] = s.group()
 
         self.info = ['T' for i in range(7)]
 
@@ -168,7 +170,10 @@ class DocxManager:
         #         getNum(r'东')
         getNum(r'地面海拔.*?m', 4)
         getNum(r'补.{1}海拔.*?m', 5)
+        print('aaaaaaa')
         getNum(r'补心高.*?m', 6)
+
+        print('bbbbbb')
 
         lst = ['X', 'Y', 'Lat', 'Lon', 'Hd', 'Hb', 'Hbb']
         for i in range(len(lst)):

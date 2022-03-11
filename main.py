@@ -116,18 +116,17 @@ def finalProcess(idx, name, path):
         process(name, path)
 
 
-idx = 69
-chck = 1
+idx = 73
+chck = 0
 name = allname[idx]
 print(name)
 
-name = '中12'
-path = r'D:\李晨星文件夹\项目文件\1.塔里木相关\塔里木资料\塔里木单井资料（中石化）\中12井\33号中12井地质设计（修改后）.doc'
+
 manager.findFile( name )
 
 if chck == 1:
-    name = '星火3'
-    path = r'D:\李晨星文件夹\项目文件\塔里木程小桂\li\塔里木单井资料（中石油）\星火3井\星火3井钻遇地层简表.doc'
+    name = '中12'
+    path = r'D:\李晨星文件夹\项目文件\1.塔里木相关\塔里木资料\塔里木单井资料（中石化）\中12井\33号中12井地质设计（修改后）.doc'
 
 if chck == 0:
     allkey = ['%s.*录井总结报告','%s.*完井', '%s.*基本数据表', '%s.*地层分层数据表']
