@@ -5,13 +5,13 @@ from Algorithm.DocxManager import DocxManager
 from Algorithm.Manager import Manager
 
 from AlgorithmExtension.ManagerExtJieXi import  ManagerExtJieXi
-from AlgorithmExtension.ManagerExtJieXiExtBsInfo import  ManagerExtJieXiExtBsInfo
+from AlgorithmExtension.ManagerExtJieXiExtBsInfoExtXLSInfo import  ManagerExtJieXiExtBsInfoExtXLSInfo
 
 import pandas as pd
 
 # print('initialize')
 p = r'D:\李晨星文件夹\项目文件\塔里木程小桂'
-manager = ManagerExtJieXiExtBsInfo(p)
+manager = ManagerExtJieXiExtBsInfoExtXLSInfo(p)
 # print('over')
 
 
@@ -89,14 +89,33 @@ def process(name, path):
         except:
             print('==============================getLayerFromTableJieXi fail, check word file')
 
+def processXLS(name, path):
+    try:
+        print('===============================try getInfoFromXLS')
+        if manager.getInfoFromXLS(path):
+            raise Exception()
+        try:
+            manager.saveInfoFromXLS(name)
+        except:
+            print('==============================storeInfoFromXLS fail, check if you want to store anyway')
+    except:
+        print('getInfoFromXLS fail, check XLS file')
+def finalProcess():
+    ed = path.split('.')[-1]
+    if ed== 'xls' or ed == 'xlsx':
+        processXLS()
+    else:
+        process(name, path)
+
+
 idx = 31
 name = allname[idx]
 print(name)
 
-name = '顺北5'
+# name = '顺北5'
 # path = r'C:\Users\HP\Desktop\tmp\顺北5井.docx'
 manager.findFile( name )
 
-# idx = 153
-# path = check(idx)
-# process(name, path)
+idx = 0
+path = check(idx)
+finalProcess()

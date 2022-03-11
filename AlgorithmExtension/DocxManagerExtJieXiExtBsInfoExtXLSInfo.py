@@ -49,13 +49,30 @@ class DocxManagerExJieXiExtBsInfoExtXLSInfo(DocxManagerExJieXiExtBsInfo):
                     if 'X：' in s and self.info[0] == 'T':
                         self.info[0] = s
                     if 'Y：' in s and self.info[1] == 'T':
-                        self.info[0] = s
+                        self.info[1] = s
                     if 'H：' in s and self.info[4] == 'T':
-                        self.info[0] = s
+                        self.info[4] = s
                     if '补心高' in s and self.info[6] == 'T':
-                        self.info[0] = s
+                        self.info[6] = s
+        col = ['X', 'Y', 'Lat', 'Lon', 'Hd', 'Hb', 'Hbb']
+        for i in range(7):
+            print(col[i], self.info[i])
+
         if self.info[0] == 'T':
             return False
         return True
 
-    def saveinfoFromXLS(self, name, foulder = ):
+    def saveinfoFromXLS(self, name, folder = r'D:\李晨星文件夹\项目文件\塔里木程小桂\info\%s.csv'):
+        # pth = folder % name
+        #
+        # if self.info[0] == 'T':
+        #     print('info为空，不能保存')
+        #     return False
+        #
+        # col = ['X', 'Y', 'Lat', 'Lon', 'Hd', 'Hb', 'Hbb']
+        # f = pd.DataFrame([self.info], columns=col)
+        # f.to_csv(pth, index=False)
+        #
+        # print(pth, '    保存成功')
+        # return True
+        return super(DocxManagerExJieXiExtBsInfoExtXLSInfo, self).saveInfoFromBsInfoTable(name, folder)

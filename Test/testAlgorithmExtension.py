@@ -32,3 +32,5 @@ docxManager = DocxManagerExJieXiExtBsInfoExtXLSInfo()
 
 path = r'C:\Users\HP\Desktop\abc\顺北5井基本数据表.xls'
 docxManager.getInfoFromXLS(path)
+
+docxManager.saveinfoFromXLS('顺北5')
