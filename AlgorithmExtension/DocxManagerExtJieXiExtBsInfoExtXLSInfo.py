@@ -15,14 +15,16 @@ class DocxManagerExJieXiExtBsInfoExtXLSInfo(DocxManagerExJieXiExtBsInfo):
     xls2xlsx = XLS2XLSX()
 
     def getInfoFromXLS(self, path):
+        print('==============')
         self.info = ['T' for i in range(7)]
 
         ed = path.split('.')[-1]
         # print(ed)
         if ed == 'xls':
             if not os.path.exists(path+'x'):
-
+                print('==============')
                 self.xls2xlsx.tras(path)
+                print('==============')
             path = path +'x'
         elif ed=='xlsx':
             pass
@@ -30,7 +32,7 @@ class DocxManagerExJieXiExtBsInfoExtXLSInfo(DocxManagerExJieXiExtBsInfo):
             print('not xls or xlsx file, wrong')
             return False
 
-
+        print('==============')
         #打开excel文件，如有公式，读取公式计算结果
         wb=load_workbook(path,data_only=True)
 
