@@ -29,8 +29,9 @@ class DocxManagerLayerExtJieXi(DocxManager):
 
     def _getLayerLstFromTable(self, tables):
         # print('==========find layer================')
-        lst = []
+        flst = []
         for table in tables:
+            lst = []
             col = len(table.columns)
 
             # print(table.cell(0, 0).text)
@@ -59,9 +60,10 @@ class DocxManagerLayerExtJieXi(DocxManager):
                     # print()
                 # print('===========lst over')
 
-                return lst
+                if len(lst)>len(flst):
+                    flst = lst
 
-        return lst
+        return flst
     def _getLstXiDiShenFromLst(self, lst ):
         def getDeepth(s):
             if ('底' in s and '深' in s) or ('井' in s and '深' in s):

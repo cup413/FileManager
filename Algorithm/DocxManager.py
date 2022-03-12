@@ -153,22 +153,27 @@ class DocxManager:
         def getNum(pat, i):
             reg = pat
             s = re.search(reg, self.text)
-            #             print(s)
-            s = s.group(0)
+            if s==None:
+                return False
+            print(s)
+            s = s.group()
             #             print(s)
             s = delSpace(s)
             reg = '[0-9]*\.[0-9]*'
             s = re.search(reg, s)
-            self.info[i] = s.group(0)
+            self.info[i] = s.group()
 
         self.info = ['T' for i in range(7)]
 
-        getNum(r'纵.*?X.*?m', 0)
-        getNum(r'横.*?Y.*?m', 1)
+        getNum(r'纵.{0,4}X.*?m', 0)
+        getNum(r'横.{0,4}Y.*?m', 1)
         #         getNum(r'东')
         getNum(r'地面海拔.*?m', 4)
         getNum(r'补.{1}海拔.*?m', 5)
+        print('aaaaaaa')
         getNum(r'补心高.*?m', 6)
+
+        print('bbbbbb')
 
         lst = ['X', 'Y', 'Lat', 'Lon', 'Hd', 'Hb', 'Hbb']
         for i in range(len(lst)):
@@ -187,43 +192,50 @@ class DocxManager:
         : lst, 一个二维数组，保存分层数据表
         '''
         # print('==========find layer================')
-        lst = []
+        flst = []
         for table in self.tables:
-            #     table = tables[1]#获取文件中的第9个表格
-            col = len(table.columns)
-
-            # print(table.cell(0, 0).text)
-            s = ''
-            for i in table.cell(0, 0).text:
-                if i != ' ':
-                    s = s + i
             try:
-                table.cell(1,0).text
+                # print('aaaaaaaaaaaaaaabbbbbbb')
+                lst = []
+                #     table = tables[1]#获取文件中的第9个表格
+                col = len(table.columns)
+
+                # print(table.cell(0, 0).text)
+                s = ''
+                for i in table.cell(0, 0).text:
+                    if i != ' ':
+                        s = s + i
+                try:
+                    table.cell(1,0).text
+                except:
+                    continue
+
+
+                # print('333333333333333333333333')
+                s2 = table.cell(1,0).text
+                if ('地层' in s) and ( '界' in s2 or '系' in s2 ):
+
+                    for i in range(1, len(table.rows)):  # 从表格第二行开始循环读取表格数据
+
+                        alst = []
+                        for j in range(col):
+                            alst.append(table.cell(i, j).text)
+                            # print(table.cell(i, j).text, end="  ")
+                        lst.append(alst)
+                        # print(alst)
+                    # print('===========lst over')
+                    # print('======lst')
+                    # print(lst)
+                    # print(len(lst), len(flst))
+                    if len(lst) > len(flst):
+                        # print('-----------------')
+                        flst = lst
             except:
-                continue
+                pass
 
-
-            # print('333333333333333333333333')
-            s2 = table.cell(1,0).text
-            if ('地层' in s) and ( '界' in s2 or '系' in s2 ):
-
-                for i in range(1, len(table.rows)):  # 从表格第二行开始循环读取表格数据
-                    #             idNum = table.cell(i,0).text #序号
-                    #             companyName = table.cell(i,1).text  #控股企业名称
-                    #             investmentRate = table.cell(i,2).text   #投资比例
-                    #             stock= table.cell(i,3).text  #股权链
-
-                    alst = []
-                    for j in range(col):
-                        alst.append(table.cell(i, j).text)
-                        # print(table.cell(i, j).text, end="  ")
-                    lst.append(alst)
-                    # print()
-                # print('===========lst over')
-
-                return lst
-
-        return lst
+        # print('aaaaaa   flst')
+        # print(flst)
+        return flst
 
     def getLayer(self):
         '''

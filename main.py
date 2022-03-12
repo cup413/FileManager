@@ -1,3 +1,5 @@
+import time
+
 from Algorithm.FileManager import FileManager
 from Algorithm.Doc2Docx import Doc2Docx
 from Algorithm.DocxManager import DocxManager
@@ -5,13 +7,17 @@ from Algorithm.DocxManager import DocxManager
 from Algorithm.Manager import Manager
 
 from AlgorithmExtension.ManagerExtJieXi import  ManagerExtJieXi
-from AlgorithmExtension.ManagerExtJieXiExtBsInfo import  ManagerExtJieXiExtBsInfo
+from AlgorithmExtension.ManagerExtJieXiExtBsInfoExtXLSInfo import  ManagerExtJieXiExtBsInfoExtXLSInfo
 
 import pandas as pd
 
+import os
+
+import time
+
 # print('initialize')
-p = r'D:\李晨星文件夹\项目文件\塔里木程小桂'
-manager = ManagerExtJieXiExtBsInfo(p)
+p = r'D:\李晨星文件夹\项目文件'
+manager = ManagerExtJieXiExtBsInfoExtXLSInfo(p)
 # print('over')
 
 
@@ -89,12 +95,72 @@ def process(name, path):
         except:
             print('==============================getLayerFromTableJieXi fail, check word file')
 
-idx = 30
-name = allname[idx]
-print(name)
+def processXLS(name, path):
+    try:
+        print('===============================try getInfoFromXLS')
+        if not manager.getInfoFromXLS(path):
+            raise Exception()
+        try:
+            manager.saveInfoFromXLS(name)
+        except:
+            print('==============================storeInfoFromXLS fail, check if you want to store anyway')
+    except:
+        print('getInfoFromXLS fail, check XLS file')
+def finalProcess(idx, name, path):
+    if path == '':
+        path = manager.getPathByIdx(idx)
 
-name = '顺北5'
-# path = r'C:\Users\HP\Desktop\tmp\顺北5井.docx'
-manager.findFile( name )
-path = check(153)
-process(name, path)
+    print(path)
+    ed = path.split('.')[-1]
+    print(ed)
+    if ed== 'xls' or ed == 'xlsx':
+        processXLS(name, path)
+    else:
+        path = check(idx)
+        process(name, path)
+
+idx = 85
+chck = 1
+name = allname[idx]
+print(idx, ': ', name)
+
+# name = '顺北5'
+
+# manager.findFile( name )
+
+if chck == 1:
+    name = '顺北5'
+    path = r'D:\李晨星文件夹\项目文件\塔里木程小桂\li\资料收集\顺北单井\顺北5井（侧钻）完钻资料\顺北5井（侧钻）研究院要资料\2、地层分层数据表'
+
+if chck == 0:
+    allkey = ['%s.*录井总结报告','%s.*完井', '%s.*基本数据表', '%s.*地层分层数据表']
+    allidx = []
+    for i in allkey:
+        # print( i% name)
+        allidx.append( manager.findKeyWrodInFile(i% name))
+    print(allidx)
+    #
+    for idx in allidx:
+        if idx == -1:
+            continue
+        finalProcess(idx, name, '')
+        print('****************************************')
+
+else:
+    # finalProcess(-1, name, path)
+    process(name, path)
+
+info = r'D:\李晨星文件夹\项目文件\塔里木程小桂\info\%s.csv'
+layer = r'D:\李晨星文件夹\项目文件\塔里木程小桂\layer\%s.csv'
+print('\n\n\n')
+if os.path.exists(info%name):
+    print(info%name, '      存在')
+    df = pd.read_csv(info%name)
+    print(df)
+print('**************************')
+if os.path.exists(layer%name):
+    print(layer%name, '      存在')
+    df = pd.read_csv(layer%name)
+    print(df)
+
+time.sleep(5)

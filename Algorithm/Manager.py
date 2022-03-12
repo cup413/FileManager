@@ -49,10 +49,36 @@ class Manager:
             if en not in endby:
                 continue
 
+            reg = path + '[0-9]*'
+            tmp = re.search(reg, i)
+            if tmp.group() != path :
+                continue
+
+
+            # print(re.search(reg, i))
+
             self.file.append( i )
+
+
 
         for i in range(len(self.file)):
             print(i ,': ', self.file[i])
+
+    def findKeyWrodInFile(self, key):
+        # print(self.file)
+        for i in range(len(self.file)):
+            # if key in self.file[i]:
+            #     print(key, ' in ', i)
+            #     return i
+            # print(key)
+            # print(type(key))
+            # key = str( key )
+            # print(key, self.file[i])
+            tmp = re.search(key, self.file[i])
+            if tmp != None:
+                # print(key, '  in ', i)
+                return i
+        return -1
 
     def checkInfo(self, path_idx):
         def action(path):
@@ -80,6 +106,8 @@ class Manager:
 
     def returnPath(self):
         return self.path
+    def getPathByIdx(self, idx):
+        return self.file[idx]
 
     def disp(self, path_idx):
         def action(path):
